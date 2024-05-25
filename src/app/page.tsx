@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { receiveMessage } from "./actions/chat-action";
+import { receiveMessage, sendMessage } from "./actions/chat-action";
+import { Message } from "./interfaces/message-interface";
 
 export default function Home() {
-  const [messages, setMessages] = useState([] as string[]);
+  const [messages, setMessages] = useState([] as Message[]);
   const [message, setMessage] = useState("");
 
   const handleSendMessage = async (formData: FormData) => {
@@ -13,16 +14,18 @@ export default function Home() {
 
     const message = formData.get("message") as string;
 
-    console.log("Message sent");
-    setMessages([...messages, message]);
+    await sendMessage(message);
+    setMessages([...messages, { message }]);
   };
-  useEffect(() => {
-    async function fetchMessages() {
-      const recentMessages = await receiveMessage();
-      // setMessages(recentMessages);
 
-      console.log(recentMessages);
-    }
+  async function fetchMessages() {
+    const recentMessages = (await receiveMessage()) as Message[];
+    // setMessages(recentMessages);
+
+    console.log(messages, "<<<<");
+    setMessages(recentMessages);
+  }
+  useEffect(() => {
     fetchMessages();
   }, []);
 
@@ -43,7 +46,7 @@ export default function Home() {
                 key={index}
                 className="bg-slate-200 text-black p-5 max-w-60 rounded-lg shadow-lg"
               >
-                <p>{message}</p>
+                <p>{message.message}</p>
               </div>
             ))
           }

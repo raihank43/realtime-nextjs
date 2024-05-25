@@ -1,10 +1,11 @@
-'use server'
+"use server";
 import { db } from "@/db/config";
+import { Message } from "../interfaces/message-interface";
 
 export async function sendMessage(message: string) {
   try {
     const collection = db.collection("messages");
-    const result = await collection.insertOne(message);
+    const result = await collection.insertOne({ message });
 
     console.log(result);
   } catch (error) {
@@ -19,7 +20,9 @@ export const receiveMessage = async () => {
     const collection = db.collection("messages");
     const result = await collection.find().toArray();
 
-    console.log(result, "receiveMessage");
+    console.log(result, "server actions");
+
+    return result as Message[];
   } catch (error) {
     console.error(error);
   }
@@ -37,5 +40,3 @@ export const receiveMessage = async () => {
 //     console.error(error);
 //   }
 // };
-
-
