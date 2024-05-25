@@ -20,6 +20,18 @@ export default function Home() {
   }
   useEffect(() => {
     fetchMessages();
+
+    const eventSource = new EventSource("/api/events");
+
+    eventSource.onmessage = (event) => {
+      console.log("Data diterima dari server", event.data);
+      // Memproses data sesuai kebutuhan Anda
+      // ...
+    };
+
+    return () => {
+      eventSource.close();
+    };
   }, []);
   return (
     <main className="h-screen w-screen flex justify-center flex-col">
