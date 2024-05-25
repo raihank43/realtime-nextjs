@@ -1,31 +1,23 @@
 "use server";
-import { db } from "@/db/config";
-import { Message } from "../interfaces/message-interface";
-
-export async function sendMessage(message: string) {
-  try {
-    const collection = db.collection("messages");
-    const result = await collection.insertOne({ message });
-
-    console.log(result);
-  } catch (error) {
-    console.error(error);
-  }
-}
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const receiveMessage = async () => {
-  // Logic to receive messages
-  // Retrieve messages from the database
-  try {
-    const collection = db.collection("messages");
-    const result = await collection.find().toArray();
+  const response = await fetch(`${baseURL}/message`);
+  const result = await response.json();
 
-    console.log(result, "server actions");
+  console.log(result, "<<< server actions");
 
-    return result as Message[];
-  } catch (error) {
-    console.error(error);
-  }
+  return result;
+};
+
+export const sendMessage = async (message: string) => {
+  const response = await fetch(`${baseURL}/message`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message }),
+  });
 };
 
 // export const getRecentMessages = async (userId: number) => {

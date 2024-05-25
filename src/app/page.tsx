@@ -4,14 +4,10 @@ import { receiveMessage, sendMessage } from "./actions/chat-action";
 import { Message } from "./interfaces/message-interface";
 
 export default function Home() {
-  const [messages, setMessages] = useState([] as Message[]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
 
   const handleSendMessage = async (formData: FormData) => {
-    // Logic to send message
-    // Send message to the database
-    // await sendMessage("Hello, World!");
-
     const message = formData.get("message") as string;
 
     await sendMessage(message);
@@ -20,16 +16,11 @@ export default function Home() {
 
   async function fetchMessages() {
     const recentMessages = (await receiveMessage()) as Message[];
-    // setMessages(recentMessages);
-
-    console.log(messages, "<<<<");
     setMessages(recentMessages);
   }
   useEffect(() => {
     fetchMessages();
   }, []);
-
-  console.log(messages, "<<<<");
   return (
     <main className="h-screen w-screen flex justify-center flex-col">
       <p className="text-4xl font-bold text-center p-6 bg-gray-600 text-white">
