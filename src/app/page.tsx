@@ -2,10 +2,22 @@
 import { useEffect, useState } from "react";
 import { receiveMessage, sendMessage } from "./actions/chat-action";
 import { Message } from "./interfaces/message-interface";
+import { useChannel } from "ably/react";
+import Head from 'next/head';
+
+import dynamic from "next/dynamic";
+
+const Chat = dynamic(() => import("./components/chat"), {
+  ssr: false,
+});
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
+
+  const { channel, ably } = useChannel("chat-demo", (message) => {
+    console.log(message, "<<< message")
+  });
 
   const handleSendMessage = async (formData: FormData) => {
     const message = formData.get("message") as string;
@@ -22,7 +34,8 @@ export default function Home() {
     fetchMessages();
   }, []);
   return (
-    <main className="h-screen w-screen flex justify-center flex-col">
+    <main className=" w-screen flex justify-center flex-col h-fit">
+      <Chat />
       <p className="text-4xl font-bold text-center p-6 bg-gray-600 text-white">
         {" "}
         Welcome to Realtime Nextjs

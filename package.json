@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "ably": "^2.0.4",
     "mongodb": "^6.6.2",
     "next": "14.2.3",
     "react": "^18",

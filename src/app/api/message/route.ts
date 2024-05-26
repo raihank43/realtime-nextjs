@@ -5,7 +5,6 @@ export async function GET(req: NextRequest) {
   try {
     const collection = db.collection("messages");
     const result = await collection.find().toArray();
-
     return NextResponse.json(result);
   } catch (error) {
     console.error(error);
